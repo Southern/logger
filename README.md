@@ -62,24 +62,51 @@ func main() {
   log := logger.New()
 
   // Messages must be this level or a more serious level in order for it to be
-  // output
-  log.Level = logger.Info
+  // output.
+  log.Level = "debug"
 
-  // Allow debug messages to be output. This includes a line showing where the
-  // log call originated.
+  // Allow debug information to be output. This includes a line showing where
+  // the log call originated. This DOES NOT set log.Level to "debug" to show
+  // debug messages.
   log.Debug = true
 
   // Automatically exit on logger.EMERG or logger.CRIT
   log.Exit = false
 
-  log.Log(EMERG, "This is an emergency.")
-  log.Log(CRIT, "This is a critical message.")
-  log.Log(ALERT, "This is an alert.")
-  log.Log(ERR, "This is an error.")
-  log.Log(WARN, "This is a warning.")
-  log.Log(NOTE, "This is a notice.")
-  log.Log(INFO, "This is an informational message.")
-  log.Log(DEBUG, "This is a debug message.")
+  logger.Log("e", "This is an emergency.")
+  logger.Log("emer", "This is an emergency.")
+  logger.Log("emergency", "This is an emergency.")
+
+  logger.Log("c", "This is a critical message.")
+  logger.Log("crit", "This is a critical message.")
+  logger.Log("critical", "This is a critical message.")
+
+  logger.Log("a", "This is an alert.")
+  logger.Log("alert", "This is an alert.")
+
+  logger.Log("e", "This is an error.")
+  logger.Log("err", "This is an error.")
+  logger.Log("error", "This is an error.")
+
+  logger.Log("w", "This is a warning.")
+  logger.Log("warn", "This is a warning.")
+  logger.Log("warning", "This is a warning.")
+
+  logger.Log("n", "This is a notice.")
+  logger.Log("note", "This is a notice.")
+  logger.Log("notice", "This is a notice.")
+
+  logger.Log("This is an informational message.")
+  logger.Log("i", "This is an informational message.")
+  logger.Log("info", "This is an informational message.")
+  logger.Log("information", "This is an informational message.")
+
+  logger.Log("d", "This is a debug message.")
+  logger.Log("debug", "This is a debug message.")
+
+  // You can also use multiple messages in one Log function.
+  logger.Log("This is an informational message.",
+    "This is another informational message")
 }
 ```
 
