@@ -15,7 +15,7 @@ go test github.com/southern/logger
 ### Logger
 ```go
 type Logger struct {
-  Level int
+  Level string
   Debug bool
   Exit bool
 }
@@ -107,6 +107,9 @@ func main() {
   // You can also use multiple messages in one Log function.
   logger.Log("This is an informational message.",
     "This is another informational message")
+
+  // You can also use raw log message types
+  logger.Raw(logger.EMERG, "This is an emergency.")
 }
 ```
 

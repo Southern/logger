@@ -31,16 +31,18 @@ var RegexMap = map[*regexp.Regexp]int {
 }
 
 type Logger struct {
-  Level string
   Debug bool
+  Colorize bool
   Exit bool
+  Level string
 }
 
 func New() *Logger {
   return &Logger{
-    Level: "i",
     Debug: false,
+    Colorize: true,
     Exit: true,
+    Level: "i",
   }
 }
 
