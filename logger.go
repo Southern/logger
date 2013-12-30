@@ -30,11 +30,34 @@ var RegexMap = map[*regexp.Regexp]int {
   regexp.MustCompile("(?i)^d(ebug)?$"): DEBUG,
 }
 
+type LoggerStack struct {
+  Errors int
+  Debug int
+}
+
 type Logger struct {
   Debug bool
   Colorize bool
   Exit bool
   Level string
+  Stack int
+}
+
+func stack(entries int) (stack map[int]map[string]interface{}) {
+  stack = make(map[int]map[string]interface{})
+
+  for i := 2; i < entries + 2; i++ {
+    _, file, line, ok := runtime.Caller(i)
+    if !ok {
+      return
+    }
+
+    id := len(stack) + 1
+    stack[id] = make(map[string]interface{})
+    stack[id]["file"] = file
+    stack[id]["line"] = line
+  }
+  return
 }
 
 func New() *Logger {
@@ -43,6 +66,7 @@ func New() *Logger {
     Colorize: true,
     Exit: true,
     Level: "i",
+    Stack: 25,
   }
 }
 
@@ -77,17 +101,17 @@ func (logger *Logger) Raw(level int, text ...string) (*Logger) {
     text = text[1:]
   }
 
-  color := "90"
+  color := 90
   label := "debug"
 
   if level == 6 {
-    color = "32"
+    color = 32
   }
   if level < 6 {
-    color = "33"
+    color = 33
   }
   if level < 4 {
-    color = "31"
+    color = 31
   }
 
   switch (level) {
@@ -100,19 +124,33 @@ func (logger *Logger) Raw(level int, text ...string) (*Logger) {
     case EMERG: label = "emergency"
   }
 
-  color = "\x1b[" + color + "m"
+  label = label + ":"
+
+  formats := map[string]string {
+    "label": fmt.Sprintf("\x1b[%dm%s\x1b[0m", color, label),
+    "debug": fmt.Sprintf("%s%%s, line %%d",
+      strings.Repeat(" ", len(label) + 1)),
+    "debugColor": "\x1b[90m%s\x1b[0m",
+  }
 
   for i := 0; i < len(text); i++ {
-    fmt.Printf("%s%s:%s %s\n", color, label, "\x1b[0m", text[i])
+    if logger.Colorize {
+      fmt.Printf("%s %s\n", formats["label"], text[i])
+    } else {
+      fmt.Printf("%s %s\n", label, text[i])      
+    }
 
-    if logger.Debug == true {
-      _, file, line, ok := runtime.Caller(1)
-      if ok == true {
-        fmt.Printf("\x1b[90m%s%s, line %d\x1b[0m\n",
-          strings.Repeat(" ", len(label) + 2), file, line)
-      } else {
-        fmt.Printf("\x1b[90m%sUnable to determine caller information.\x1b[0m\n",
-          strings.Repeat(" ", len(label) + 2))
+    if logger.Debug == true || level <= ERR {
+      callers := stack(logger.Stack)
+
+      for x := 1; x < len(callers) + 1; x++ {
+        stack := callers[x]
+        if logger.Colorize {
+          fmt.Printf(formats["debugColor"] + "\n",
+            fmt.Sprintf(formats["debug"], stack["file"], stack["line"]))
+        } else {
+          fmt.Printf(formats["debug"] + "\n", stack["file"], stack["line"])
+        }
       }
     }
   }
