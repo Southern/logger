@@ -23,7 +23,7 @@ var RegexMap = map[*regexp.Regexp]int {
   regexp.MustCompile("(?i)^e(mer(gency)?)?$"): EMERG,
   regexp.MustCompile("(?i)^c(rit(ical)?)?$"): CRIT,
   regexp.MustCompile("(?i)^a(lert)?$"): ALERT,
-  regexp.MustCompile("(?i)^e(rr(or)?)?$"): ERR,
+  regexp.MustCompile("(?i)^err(or)?$"): ERR,
   regexp.MustCompile("(?i)^w(arn(ing)?)?$"): WARN,
   regexp.MustCompile("(?i)^n(ot(e|ice)?)?$"): NOTE,
   regexp.MustCompile("(?i)^i(nfo(rmation)?)?$"): INFO,
