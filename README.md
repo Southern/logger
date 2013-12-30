@@ -16,8 +16,10 @@ go test github.com/southern/logger
 ```go
 type Logger struct {
   Level string
+  Colorize bool
   Debug bool
   Exit bool
+  Stack int
 }
 ```
 
@@ -61,17 +63,23 @@ func main() {
   // way it can be constructed if you don't want to call .New()
   log := logger.New()
 
+  // Disable colors on messages
+  log.Colorize = false
+
   // Messages must be this level or a more serious level in order for it to be
   // output.
   log.Level = "debug"
 
-  // Allow debug information to be output. This includes a line showing where
-  // the log call originated. This DOES NOT set log.Level to "debug" to show
+  // Allow debug information to be output. This includes a stack with
+  // information on the caller. This DOES NOT set log.Level to "debug" to show
   // debug messages.
   log.Debug = true
 
   // Automatically exit on logger.EMERG or logger.CRIT
   log.Exit = false
+
+  // Set the stack limit
+  log.Stack = 25
 
   logger.Log("e", "This is an emergency.")
   logger.Log("emer", "This is an emergency.")
@@ -84,7 +92,6 @@ func main() {
   logger.Log("a", "This is an alert.")
   logger.Log("alert", "This is an alert.")
 
-  logger.Log("e", "This is an error.")
   logger.Log("err", "This is an error.")
   logger.Log("error", "This is an error.")
 

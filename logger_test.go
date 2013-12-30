@@ -4,7 +4,6 @@ import "testing"
 
 func TestLogger(t *testing.T) {
   logger := New()
-  logger.Debug = true
   logger.Exit = false
 
   // Test Raw
@@ -28,7 +27,6 @@ func TestLogger(t *testing.T) {
   logger.Log("a", "Test")
   logger.Log("alert", "Test")
 
-  logger.Log("e", "Test")
   logger.Log("err", "Test")
   logger.Log("error", "Test")
 
@@ -48,4 +46,14 @@ func TestLogger(t *testing.T) {
 
   logger.Log("d", "Test")
   logger.Log("debug", "Test")
+
+  // Test without colors
+  logger.Colorize = false
+  logger.Log("e", "Test")
+  logger.Log("c", "Test")
+  logger.Log("err", "Test")
+  logger.Log("w", "Test")
+  logger.Log("n", "Test")
+  logger.Log("Test")
+  logger.Log("i", "Test")
 }
