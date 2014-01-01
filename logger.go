@@ -30,11 +30,6 @@ var RegexMap = map[*regexp.Regexp]int {
   regexp.MustCompile("(?i)^d(ebug)?$"): DEBUG,
 }
 
-type LoggerStack struct {
-  Errors int
-  Debug int
-}
-
 type Logger struct {
   Debug bool
   Colorize bool
