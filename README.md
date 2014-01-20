@@ -59,7 +59,7 @@ package main
 import "github.com/southern/logger"
 
 func main() {
-  // Initialize a new log with the default values. &logger.Logger{} is another
+  // Initialize a new log with the default values. &log.Logger{} is another
   // way it can be constructed if you don't want to call .New()
   log := logger.New()
 
@@ -81,42 +81,42 @@ func main() {
   // Set the stack limit
   log.Stack = 25
 
-  logger.Log("e", "This is an emergency.")
-  logger.Log("emer", "This is an emergency.")
-  logger.Log("emergency", "This is an emergency.")
+  log.Log("e", "This is an emergency.")
+  log.Log("emer", "This is an emergency.")
+  log.Log("emergency", "This is an emergency.")
 
-  logger.Log("c", "This is a critical message.")
-  logger.Log("crit", "This is a critical message.")
-  logger.Log("critical", "This is a critical message.")
+  log.Log("c", "This is a critical message.")
+  log.Log("crit", "This is a critical message.")
+  log.Log("critical", "This is a critical message.")
 
-  logger.Log("a", "This is an alert.")
-  logger.Log("alert", "This is an alert.")
+  log.Log("a", "This is an alert.")
+  log.Log("alert", "This is an alert.")
 
-  logger.Log("err", "This is an error.")
-  logger.Log("error", "This is an error.")
+  log.Log("err", "This is an error.")
+  log.Log("error", "This is an error.")
 
-  logger.Log("w", "This is a warning.")
-  logger.Log("warn", "This is a warning.")
-  logger.Log("warning", "This is a warning.")
+  log.Log("w", "This is a warning.")
+  log.Log("warn", "This is a warning.")
+  log.Log("warning", "This is a warning.")
 
-  logger.Log("n", "This is a notice.")
-  logger.Log("note", "This is a notice.")
-  logger.Log("notice", "This is a notice.")
+  log.Log("n", "This is a notice.")
+  log.Log("note", "This is a notice.")
+  log.Log("notice", "This is a notice.")
 
-  logger.Log("This is an informational message.")
-  logger.Log("i", "This is an informational message.")
-  logger.Log("info", "This is an informational message.")
-  logger.Log("information", "This is an informational message.")
+  log.Log("This is an informational message.")
+  log.Log("i", "This is an informational message.")
+  log.Log("info", "This is an informational message.")
+  log.Log("information", "This is an informational message.")
 
-  logger.Log("d", "This is a debug message.")
-  logger.Log("debug", "This is a debug message.")
+  log.Log("d", "This is a debug message.")
+  log.Log("debug", "This is a debug message.")
 
   // You can also use multiple messages in one Log function.
-  logger.Log("This is an informational message.",
+  log.Log("This is an informational message.",
     "This is another informational message")
 
   // You can also use raw log message types
-  logger.Raw(logger.EMERG, "This is an emergency.")
+  log.Raw(logger.EMERG, "This is an emergency.")
 }
 ```
 
