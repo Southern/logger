@@ -92,6 +92,10 @@ func (logger *Logger) Raw(level int, text ...string) *Logger {
     return logger
   }
 
+  if len(text) == 0 {
+    return logger
+  }
+
   if text[0] == string(level) {
     text = text[1:]
   }
