@@ -19,29 +19,29 @@ const (
   DEBUG
 )
 
-var RegexMap = map[*regexp.Regexp]int {
-  regexp.MustCompile("(?i)^e(mer(gency)?)?$"): EMERG,
-  regexp.MustCompile("(?i)^c(rit(ical)?)?$"): CRIT,
-  regexp.MustCompile("(?i)^a(lert)?$"): ALERT,
-  regexp.MustCompile("(?i)^err(or)?$"): ERR,
-  regexp.MustCompile("(?i)^w(arn(ing)?)?$"): WARN,
-  regexp.MustCompile("(?i)^n(ot(e|ice)?)?$"): NOTE,
+var RegexMap = map[*regexp.Regexp]int{
+  regexp.MustCompile("(?i)^e(mer(gency)?)?$"):   EMERG,
+  regexp.MustCompile("(?i)^c(rit(ical)?)?$"):    CRIT,
+  regexp.MustCompile("(?i)^a(lert)?$"):          ALERT,
+  regexp.MustCompile("(?i)^err(or)?$"):          ERR,
+  regexp.MustCompile("(?i)^w(arn(ing)?)?$"):     WARN,
+  regexp.MustCompile("(?i)^n(ot(e|ice)?)?$"):    NOTE,
   regexp.MustCompile("(?i)^i(nfo(rmation)?)?$"): INFO,
-  regexp.MustCompile("(?i)^d(ebug)?$"): DEBUG,
+  regexp.MustCompile("(?i)^d(ebug)?$"):          DEBUG,
 }
 
 type Logger struct {
-  Debug bool
+  Debug    bool
   Colorize bool
-  Exit bool
-  Level string
-  Stack int
+  Exit     bool
+  Level    string
+  Stack    int
 }
 
 func stack(entries int) (stack map[int]map[string]interface{}) {
   stack = make(map[int]map[string]interface{})
 
-  for i := 2; i < entries + 2; i++ {
+  for i := 2; i < entries+2; i++ {
     _, file, line, ok := runtime.Caller(i)
     if !ok {
       return
@@ -57,15 +57,15 @@ func stack(entries int) (stack map[int]map[string]interface{}) {
 
 func New() *Logger {
   return &Logger{
-    Debug: false,
+    Debug:    false,
     Colorize: true,
-    Exit: true,
-    Level: "i",
-    Stack: 25,
+    Exit:     true,
+    Level:    "i",
+    Stack:    25,
   }
 }
 
-func (logger *Logger) GetLevel(level string) (int) {
+func (logger *Logger) GetLevel(level string) int {
   for regexp, i := range RegexMap {
     if regexp.MatchString(level) {
       return i
@@ -74,7 +74,7 @@ func (logger *Logger) GetLevel(level string) (int) {
   return -1
 }
 
-func (logger *Logger) Log(data ...string) (*Logger) {
+func (logger *Logger) Log(data ...string) *Logger {
   level := logger.GetLevel(data[0])
   if level > -1 {
     data = data[1:]
@@ -84,7 +84,7 @@ func (logger *Logger) Log(data ...string) (*Logger) {
   return logger.Raw(INFO, data...)
 }
 
-func (logger *Logger) Raw(level int, text ...string) (*Logger) {
+func (logger *Logger) Raw(level int, text ...string) *Logger {
   if level > logger.GetLevel(logger.Level) {
     return logger
   }
@@ -109,22 +109,29 @@ func (logger *Logger) Raw(level int, text ...string) (*Logger) {
     color = 31
   }
 
-  switch (level) {
-    case INFO: label = "info"
-    case NOTE: label = "notice"
-    case WARN: label = "warning"
-    case ERR: label = "error"
-    case ALERT: label = "alert"
-    case CRIT: label = "critical"
-    case EMERG: label = "emergency"
+  switch level {
+  case INFO:
+    label = "info"
+  case NOTE:
+    label = "notice"
+  case WARN:
+    label = "warning"
+  case ERR:
+    label = "error"
+  case ALERT:
+    label = "alert"
+  case CRIT:
+    label = "critical"
+  case EMERG:
+    label = "emergency"
   }
 
   label = label + ":"
 
-  formats := map[string]string {
+  formats := map[string]string{
     "label": fmt.Sprintf("\x1b[%dm%s\x1b[0m", color, label),
     "debug": fmt.Sprintf("%s%%s, line %%d",
-      strings.Repeat(" ", len(label) + 1)),
+      strings.Repeat(" ", len(label)+1)),
     "debugColor": "\x1b[90m%s\x1b[0m",
   }
 
@@ -132,19 +139,19 @@ func (logger *Logger) Raw(level int, text ...string) (*Logger) {
     if logger.Colorize {
       fmt.Printf("%s %s\n", formats["label"], text[i])
     } else {
-      fmt.Printf("%s %s\n", label, text[i])      
+      fmt.Printf("%s %s\n", label, text[i])
     }
 
     if logger.Debug == true || level <= ERR {
       callers := stack(logger.Stack)
 
-      for x := 1; x < len(callers) + 1; x++ {
+      for x := 1; x < len(callers)+1; x++ {
         stack := callers[x]
         if logger.Colorize {
-          fmt.Printf(formats["debugColor"] + "\n",
+          fmt.Printf(formats["debugColor"]+"\n",
             fmt.Sprintf(formats["debug"], stack["file"], stack["line"]))
         } else {
-          fmt.Printf(formats["debug"] + "\n", stack["file"], stack["line"])
+          fmt.Printf(formats["debug"]+"\n", stack["file"], stack["line"])
         }
       }
     }
